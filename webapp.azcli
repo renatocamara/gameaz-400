@@ -1,0 +1,22 @@
+# Variable block
+location="eastus"
+resourceGroup="gameaz-400"
+webappname=gameaz-400
+appServicePlan="appServicePlan-$webappname"
+echo "Web-App-Name=""$webappname"
+echo "App-Service-Plan=""$appServicePlan" 
+
+# Create a resource group.
+echo "Creating $resourceGroup in" "$location"
+az group create --name $resourceGroup --location "$location"
+
+# Create an App Service plan in `Standard` tier.
+echo "Creating" $appServicePlan
+az appservice plan create --name $appServicePlan --resource-group $resourceGroup --sku S1 --is-linux
+
+# Create a web app.
+echo "Creating" $webappname
+az webapp create --name $webappname --resource-group $resourceGroup --plan $appServicePlan --runtime NODE:18-lts
+
+# test web app
+az webapp browse --name $webappname --resource-group $resourceGroup
